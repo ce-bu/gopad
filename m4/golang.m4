@@ -53,16 +53,20 @@ m4_define([_AC_LANG_IO_PROGRAM(Golang)],
 ## 3. Looking for Compilers and Preprocessors.  ##
 ## -------------------------------------------- ##
 
+AC_DEFUN([AC_LANG_COMPILER(Golang)],
+[AC_REQUIRE([AC_PROG_GOLANG])])
 
 AC_DEFUN([AC_PROG_GOLANG],
 [AC_LANG_PUSH(Golang)dnl
 
-AC_PATH_PROG(GOCMD, go, false, [${PATH}${PATH_SEPARATOR}/usr/local/go/bin], false)
-_AS_ECHO_LOG([checking for _AC_LANG compiler version])
-set X $ac_compile
-ac_compiler=$[2]
-_AC_DO_LIMIT([$ac_compiler version >&AS_MESSAGE_LOG_FD])
+_search_path="/usr/local/go/bin${PATH_SEPARATOR}${PATH}"
+AC_PATH_PROG(GOCMD, go,,[${_search_path}])
 
+test -z "$GOCMD" && AC_MSG_FAILURE([no acceptable Golang compiler found in $_search_path])
+
+_AS_ECHO_LOG([checking for _AC_LANG compiler version])
+
+_AC_DO_LIMIT(["$GOCMD" version >&AS_MESSAGE_LOG_FD])
 
 m4_expand_once([_AC_COMPILER_EXEEXT])[]dnl
 
